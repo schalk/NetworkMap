@@ -2,7 +2,7 @@
 
 ## Network Map Files
 
-Network map files are in '[project home]/data/' and should be in the follwong format:
+Network map files are in '[project home]/data/' and should be in the following format:
 ```
 { "nodes" :
   [
