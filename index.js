@@ -22,6 +22,7 @@ app.get('/nodeinfo', function (req, res) {
 app.use(express.static('./html/'))
 app.use('/vis', express.static('./node_modules/vis'))
 app.use('/jquery', express.static('./node_modules/jquery'))
+app.use('/jquery-ui', express.static('./node_modules/jquery'))
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')

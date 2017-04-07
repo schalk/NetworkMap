@@ -19,6 +19,7 @@
   "dependencies": {
     "express": "^4.15.2",
     "jquery": "^3.2.1",
+    "jquery-ui": "^1.12.1",
     "vis": "^4.19.1"
   }
 }
