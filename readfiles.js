@@ -34,9 +34,13 @@ function processFileData(filename, data) {
   return data;
 }
 
-getFiles(function(map) {
-  for(var [key, value] of map.entries()) {
-    var xx = processFileData(key, JSON.parse(value));
-    console.log(JSON.stringify(xx));
-  }
-});
+exports.getNetworkInfoFromFiles = function (callback) {
+  getFiles(function(map) {
+    var fileMap = new Map();
+    for(var [key, value] of map.entries()) {
+      fileMap.set(key, processFileData(key, JSON.parse(value)));
+    }
+    callback(fileMap);
+  });
+}
+

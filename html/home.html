@@ -73,23 +73,15 @@ footer {background: #aaa;color:white;}
   <p> Yo yo yo </p>
 </article>
 
-
 <script type="text/javascript">
-    // create an array with nodes
+$(function() {
     var nodes = new vis.DataSet([
-        {id: 1, label: 'Node 1'},
-        {id: 2, label: 'Node 2'},
-        {id: 3, label: 'Node 3'},
-        {id: 4, label: 'Node 4'},
-        {id: 5, label: 'Node 5'}
+        {id: 1, label: 'Loading...'}
+
     ]);
 
     // create an array with edges
     var edges = new vis.DataSet([
-        {from: 1, to: 3},
-        {from: 1, to: 2},
-        {from: 2, to: 4},
-        {from: 2, to: 5}
     ]);
 
     // create a network
@@ -108,8 +100,10 @@ footer {background: #aaa;color:white;}
     var my_json;
     $.getJSON('/nodeinfo', function(json) {
        console.log(json);
-       nodes.update(json);
+       nodes.update(json.nodes);
+       edges.update(json.connections);
     });
+});
 </script>
 </body>
 </html>

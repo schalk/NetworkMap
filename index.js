@@ -1,22 +1,19 @@
-var express = require('express')
-var app = express()
+const express = require('express')
+const config = require('./readfiles.js');
+var configData = new Map();
 
-    var nodeJSON = [
-        {id: 1, label: 'Node 1'},
-        {id: 2, label: 'Node 2'},
-        {id: 3, label: 'Node 3'},
-        {id: 4, label: 'Node 4'},
-        {id: 5, label: 'Node 5'},
-        {id: 6, label: 'Node 6'},
-        {id: 7, label: 'Node 7'}
-    ];
+config.getNetworkInfoFromFiles(function(data) {
+	configData = data;
+});
+
+var app = express()
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/html/home.html')
 })
 
 app.get('/nodeinfo', function (req, res) {
-  res.json(nodeJSON)
+  res.json(configData.get("network_one.json"));
 })
 
 app.use(express.static('./html/'))
