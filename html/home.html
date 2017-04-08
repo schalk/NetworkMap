@@ -60,7 +60,7 @@ footer {background: #aaa;color:white;}
 </header>
 
 <nav class="nav">
-<ul>
+<ul id="file_list">
   <li><a href="#">London</a></li>
   <li><a href="#">Paris</a></li>
   <li><a href="#">Tokyo</a></li>
@@ -100,9 +100,28 @@ $(function() {
     var my_json;
     $.getJSON('/nodeinfo', function(json) {
        console.log(json);
-       nodes.update(json.nodes);
-       edges.update(json.connections);
+       clear_file_list();
+       json.forEach(function(element) {
+        update_file_list(element.filename);
+       });
+ 
+       nodes.update(json[0].data.nodes);
+       edges.update(json[0].data.connections);
+
+
+
     });
+
+    function clear_file_list()
+    {
+       $("#file_list").empty();
+    }
+
+    function update_file_list(newtext)
+    {
+       $("#file_list").append("<li>" + newtext + "</li>");
+    }
+
 });
 </script>
 </body>

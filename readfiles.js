@@ -36,11 +36,13 @@ function processFileData(filename, data) {
 
 exports.getNetworkInfoFromFiles = function (callback) {
   getFiles(function(map) {
-    var fileMap = new Map();
+    var filesData = [];
     for(var [key, value] of map.entries()) {
-      fileMap.set(key, processFileData(key, JSON.parse(value)));
+      var data = { "filename": key, "data": processFileData(key, JSON.parse(value)) };
+      filesData.push(data);
+      // fileMap.set(key, processFileData(key, JSON.parse(value)));
     }
-    callback(fileMap);
+    callback(filesData);
   });
 }
 

@@ -1,6 +1,6 @@
 const express = require('express')
 const config = require('./readfiles.js');
-var configData = new Map();
+var configData = [];
 
 config.getNetworkInfoFromFiles(function(data) {
 	configData = data;
@@ -13,7 +13,8 @@ app.get('/', function (req, res) {
 })
 
 app.get('/nodeinfo', function (req, res) {
-  res.json(configData.get("network_one.json"));
+  console.log(JSON.stringify(configData));
+  res.json(configData);
 })
 
 app.use(express.static('./html/'))
