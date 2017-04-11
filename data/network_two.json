@@ -1,0 +1,18 @@
+{ 
+  "description" : "This is network TWO",
+  "nodes" :
+  [
+    {"label": "Web Server 2", "host": "172.16.125.104", "notes": "I am a web server", "type": "WWW"},
+    {"label": "DB 2", "host": "172.16.42.47", "notes": "The DB runs on me.", "type": "DB"},
+    {"label": "Load Balancer2", "host": "172.16.42.216", "notes": "I am a load balancer.", "type": "LB"},
+    {"label": "App Server", "host": "172.16.42.25", "notes": "I do app server stuff.", "type": "APPS"}
+
+  ],
+  "connections"  :
+  [
+    {"from": "172.16.125.104", "to" : "172.16.42.47"},
+    {"from": "172.16.42.47", "to" :  "172.16.42.216"},
+    {"from": "172.16.42.47", "to" :  "172.16.42.25"},
+    {"from": "172.16.125.104", "to" :  "172.16.42.25"}
+  ]
+}

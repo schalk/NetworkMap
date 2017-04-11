@@ -2,36 +2,101 @@
 <head>
     <script type="text/javascript" src="/vis/dist/vis.js"></script>
     <script type="text/javascript" src="/jquery/dist/jquery.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 
     <link href="/vis/dist/vis.css" rel="stylesheet" type="text/css" />
 
     <style type="text/css">
         #mynetwork {
-            width: 600px;
-            height: 400px;
+            width: 800px;
+            height: 600px;
             border: 1px solid lightgray;
         }
-    </style>
+            </style>
+              <style>
+  .ui-menu { width: 150px; }
+  </style>
+
+<style> 
+.flex-container {
+    display: -webkit-flex;
+    display: flex;  
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    text-align: center;
+}
+
+.flex-container > * {
+    padding: 15px;
+    -webkit-flex: 1 100%;
+    flex: 1 100%;
+}
+
+.article {
+    text-align: left;
+}
+
+header {background: black;color:white;}
+footer {background: #aaa;color:white;}
+.nav {background:#eee;}
+
+.nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+.nav ul a {
+    text-decoration: none;
+}
+
+@media all and (min-width: 800px) {
+    .nav {text-align:left;-webkit-flex: 1 auto;flex:1 auto;-webkit-order:1;order:1;}
+    .article {-webkit-flex:5 0px;flex:5 0px;-webkit-order:2;order:2;}
+    footer {-webkit-order:3;order:3;}
+}
+</style>
+
+
 </head>
 <body>
-<div id="mynetwork"></div>
+<div class="flex-container">
+<header>
+  <h1>Network Map</h1>
+</header>
+
+<nav class="nav">
+<header>Selected Network: </header>
+<select name="file_list" id="file_list" style="display: block;">
+  <option>Loading...</option>
+</select>
+<p></p>
+<header>Network Info: </header>
+<p></p>
+<div id="file_info">Select...</div>
+<p></p>
+<header>Node Info: </header>
+<p></p>
+<div id="node_info"></div>
+</nav>
+
+<article class="article">
+  <div id="mynetwork"></div>
+</article>
 
 <script type="text/javascript">
-    // create an array with nodes
+$(function() {
+    $( "#file_list" ).selectmenu();
+    var all_data;
+    var my_json;
+
     var nodes = new vis.DataSet([
-        {id: 1, label: 'Node 1'},
-        {id: 2, label: 'Node 2'},
-        {id: 3, label: 'Node 3'},
-        {id: 4, label: 'Node 4'},
-        {id: 5, label: 'Node 5'}
+        {id: 1, label: 'Loading...'}
+
     ]);
 
     // create an array with edges
     var edges = new vis.DataSet([
-        {from: 1, to: 3},
-        {from: 1, to: 2},
-        {from: 2, to: 4},
-        {from: 2, to: 5}
     ]);
 
     // create a network
@@ -47,11 +112,50 @@
     // initialize your network!
     var network = new vis.Network(container, data, options);
 
-    var my_json;
+    network.on("selectNode", function (params) {
+        console.log('selectNode Event:', params);
+        $("#node_info").html("<h2>" + my_json[params.nodes].label + "</h2>" + "<p> Host: " + my_json[params.nodes].host + "</p><p>" + my_json[params.nodes].notes + "</p>");
+    });
+
+
     $.getJSON('/nodeinfo', function(json) {
        console.log(json);
-       nodes.update(json);
+       all_data = json;
+       clear_file_list();
+       json.forEach(function(element, index) {
+        update_file_list(element.filename, index);
+       });
+       $("#file_list").selectmenu('refresh');
+
+       updateDisplay(0);
     });
+
+    $('#file_list').on('selectmenuchange',function(event, ui){
+      updateDisplay(ui.item.value);
+    });
+
+    function updateDisplay(index) {
+       nodes.clear();
+       edges.clear();
+       nodes.update(all_data[index].data.nodes);
+       edges.update(all_data[index].data.connections);
+       my_json = all_data[index].data.nodes;       
+       $("#node_info").html("<h2>...</h2>"); 
+       $("#file_info").text(all_data[index].data.description);
+    }
+
+
+    function clear_file_list()
+    {
+       $("#file_list").empty();
+    }
+
+    function update_file_list(newtext, index)
+    {
+       $("#file_list").append($("<option></option>").attr("value", index).text(newtext));
+    }
+
+});
 </script>
 </body>
 </html>
