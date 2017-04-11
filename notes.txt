@@ -1,0 +1,5 @@
+    var network = new vis.Network(container, data, options);
+    network.on("selectNode", function (params) {
+        console.log('selectNode Event:', params);
+        document.getElementById('eventSpan').innerHTML = "<h2>" + nodesArray[params.nodes - 1].label + "</h2>" +nodesArray[params.nodes - 1].title + "<br>" + nodesArray[params.nodes - 1].info;
+    });
