@@ -1,4 +1,6 @@
-{ "nodes" :
+{ 
+  "description" : "This is network ONE",
+  "nodes" :
   [
     {"label": "Web Server", "host": "172.16.125.104", "notes": "I am a web server", "type": "WWW"},
     {"label": "DB 1", "host": "172.16.42.47", "notes": "The DB runs on me.", "type": "DB"},

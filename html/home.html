@@ -87,6 +87,7 @@ footer {background: #aaa;color:white;}
 <script type="text/javascript">
 $(function() {
     $( "#file_list" ).selectmenu();
+    var all_data;
     var my_json;
 
     var nodes = new vis.DataSet([
@@ -113,27 +114,35 @@ $(function() {
 
     network.on("selectNode", function (params) {
         console.log('selectNode Event:', params);
-        $("#node_info").html("<h2>" + my_json[params.nodes].label + "</h2>");
- //       $("#node_info").html("<h2>" + "FFFF" + "</h2>");
-
+        $("#node_info").html("<h2>" + my_json[params.nodes].label + "</h2>" + "<p> Host: " + my_json[params.nodes].host + "</p><p>" + my_json[params.nodes].notes + "</p>");
     });
 
 
     $.getJSON('/nodeinfo', function(json) {
        console.log(json);
+       all_data = json;
        clear_file_list();
-       json.forEach(function(element) {
-        update_file_list(element.filename);
+       json.forEach(function(element, index) {
+        update_file_list(element.filename, index);
        });
- 
-       nodes.update(json[0].data.nodes);
-       edges.update(json[0].data.connections);
-       my_json = json[0].data.nodes;
+       $("#file_list").selectmenu('refresh');
+
+       updateDisplay(0);
     });
 
-    $(document).on('change','#file_list',function(){
-      $("#file_info").text("DDDDDD");
+    $('#file_list').on('selectmenuchange',function(event, ui){
+      updateDisplay(ui.item.value);
     });
+
+    function updateDisplay(index) {
+       nodes.clear();
+       edges.clear();
+       nodes.update(all_data[index].data.nodes);
+       edges.update(all_data[index].data.connections);
+       my_json = all_data[index].data.nodes;       
+       $("#node_info").html("<h2>...</h2>"); 
+       $("#file_info").text(all_data[index].data.description);
+    }
 
 
     function clear_file_list()
@@ -143,8 +152,7 @@ $(function() {
 
     function update_file_list(newtext, index)
     {
-
-       $("#file_list").append("<option value='" + index + "'>" + newtext + "</option>");
+       $("#file_list").append($("<option></option>").attr("value", index).text(newtext));
     }
 
 });
