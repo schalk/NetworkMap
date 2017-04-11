@@ -2,6 +2,9 @@
 <head>
     <script type="text/javascript" src="/vis/dist/vis.js"></script>
     <script type="text/javascript" src="/jquery/dist/jquery.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 
     <link href="/vis/dist/vis.css" rel="stylesheet" type="text/css" />
 
@@ -12,6 +15,9 @@
             border: 1px solid lightgray;
         }
             </style>
+              <style>
+  .ui-menu { width: 150px; }
+  </style>
 
 <style> 
 .flex-container {
@@ -60,21 +66,29 @@ footer {background: #aaa;color:white;}
 </header>
 
 <nav class="nav">
-<ul id="file_list">
-  <li><a href="#">London</a></li>
-  <li><a href="#">Paris</a></li>
-  <li><a href="#">Tokyo</a></li>
-</ul>
+<header>Selected Network: </header>
+<select name="file_list" id="file_list" style="display: block;">
+  <option>Loading...</option>
+</select>
+<p></p>
+<header>Network Info: </header>
+<p></p>
+<div id="file_info">Select...</div>
+<p></p>
+<header>Node Info: </header>
+<p></p>
+<div id="node_info"></div>
 </nav>
 
 <article class="article">
-  <h1>London</h1>
   <div id="mynetwork"></div>
-  <p> Yo yo yo </p>
 </article>
 
 <script type="text/javascript">
 $(function() {
+    $( "#file_list" ).selectmenu();
+    var my_json;
+
     var nodes = new vis.DataSet([
         {id: 1, label: 'Loading...'}
 
@@ -97,7 +111,14 @@ $(function() {
     // initialize your network!
     var network = new vis.Network(container, data, options);
 
-    var my_json;
+    network.on("selectNode", function (params) {
+        console.log('selectNode Event:', params);
+        $("#node_info").html("<h2>" + my_json[params.nodes].label + "</h2>");
+ //       $("#node_info").html("<h2>" + "FFFF" + "</h2>");
+
+    });
+
+
     $.getJSON('/nodeinfo', function(json) {
        console.log(json);
        clear_file_list();
@@ -107,19 +128,23 @@ $(function() {
  
        nodes.update(json[0].data.nodes);
        edges.update(json[0].data.connections);
-
-
-
+       my_json = json[0].data.nodes;
     });
+
+    $(document).on('change','#file_list',function(){
+      $("#file_info").text("DDDDDD");
+    });
+
 
     function clear_file_list()
     {
        $("#file_list").empty();
     }
 
-    function update_file_list(newtext)
+    function update_file_list(newtext, index)
     {
-       $("#file_list").append("<li>" + newtext + "</li>");
+
+       $("#file_list").append("<option value='" + index + "'>" + newtext + "</option>");
     }
 
 });
