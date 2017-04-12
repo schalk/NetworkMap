@@ -115,8 +115,8 @@ $(function() {
     network.on("selectNode", function (params) {
         console.log('selectNode Event:', params);
         $("#node_info").html("<h2>" + my_json[params.nodes].label + "</h2>" + "<p> Host: " + my_json[params.nodes].host + "</p><p>" + my_json[params.nodes].notes + "</p>");
+        network.focus(my_json[params.nodes].id);
     });
-
 
     $.getJSON('/nodeinfo', function(json) {
        console.log(json);
